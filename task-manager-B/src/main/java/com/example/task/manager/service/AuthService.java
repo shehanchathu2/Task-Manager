@@ -32,12 +32,14 @@ public class AuthService {
 
         String token = jwtService.generateToken(user.getEmail());
 
-        return new AuthResponse(token);
+        return new AuthResponse(token,user.getRole().name());
 
     }
 
     public AuthResponse login(LoginRequest request){
-        User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        User user = userRepository
+                .findByEmail(request.getEmail())
+                .orElseThrow();
 
         if(!passwordEncoder.matches(request.getPassword(),user.getPassword())){
             throw new RuntimeException("Invalid credential");
@@ -45,6 +47,6 @@ public class AuthService {
 
         String token = jwtService.generateToken((user.getEmail()));
 
-        return new AuthResponse(token);
+        return new AuthResponse(token,user.getRole().name());
     }
 }

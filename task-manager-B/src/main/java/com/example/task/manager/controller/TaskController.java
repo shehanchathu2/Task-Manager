@@ -45,4 +45,14 @@ public class TaskController {
         taskService.deleteTask(id);
         return ResponseEntity.ok( "Taks detele successufully");
     }
+
+    @GetMapping("/{id}")
+    public Task getTask(@PathVariable Long id) {
+        return taskService.getOneTask(id);
+    }
+
+    @PutMapping("/{id}")
+    public Task updateTask(@PathVariable Long id, @RequestBody Task task) {
+        return taskService.updateTask(id, task);
+    }
 }

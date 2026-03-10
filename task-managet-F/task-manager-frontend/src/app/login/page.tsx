@@ -9,28 +9,29 @@ export default function LoginPage() {
 
     const { login, role } = useAuth()
     const router = useRouter()
-
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
 
     const handleLogin = async () => {
 
-        try {
+    try {
 
-            await login(email, password)
+        await login(email, password)
 
-            if (role === "ADMIN") {
-                router.push("/admin")
-            } else {
-                router.push("/dashboard")
-            }
+        const userRole = localStorage.getItem("role")
 
-        } catch (err) {
-            setError("Invalid email or password")
+        if (userRole === "ADMIN") {
+            router.push("/admin")
+        } else {
+            router.push("/dashboard")
         }
+
+    } catch (err) {
+        setError("Invalid email or password")
     }
 
+}
     return (
 
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
