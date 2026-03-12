@@ -49,4 +49,13 @@ public class AuthService {
 
         return new AuthResponse(token,user.getRole().name());
     }
+
+    public Role getRoleByEmail(String email) {
+
+        User user = userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return user.getRole();
+    }
 }

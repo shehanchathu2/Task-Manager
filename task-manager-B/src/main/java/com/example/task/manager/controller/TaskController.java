@@ -2,6 +2,7 @@ package com.example.task.manager.controller;
 
 
 import com.example.task.manager.model.*;
+import com.example.task.manager.service.AuthService;
 import com.example.task.manager.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class TaskController {
 
     private final TaskService taskService;
+    private final AuthService authService;
 
     @PostMapping
     public Task create (@RequestBody Task task , Authentication authentication){
@@ -54,5 +56,19 @@ public class TaskController {
     @PutMapping("/{id}")
     public Task updateTask(@PathVariable Long id, @RequestBody Task task) {
         return taskService.updateTask(id, task);
+    }
+
+    @GetMapping("/filter")
+    public Page<Task> getTasks(
+            @RequestParam(required = false) String priority,
+            @RequestParam(required = false) String status,
+            Pageable pageable,
+            Authentication authentication
+    ) {
+
+        String email = authentication.getName();
+        Role role = authService.getRoleByEmail(email);
+
+        return taskService.getTasks(email, role, priority, status, pageable);
     }
 }

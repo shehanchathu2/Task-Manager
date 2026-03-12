@@ -62,4 +62,33 @@ public class TaskService {
 
         return taskRepository.save(task);
     }
+
+
+    public Page<Task> getTasks(String email, Role role, String priority, String status, Pageable pageable) {
+
+        if (role == Role.ADMIN) {
+
+            if (priority != null && status != null) {
+                return taskRepository.findByPriorityAndStatus(priority, status, pageable);
+            }
+
+            if (priority != null) {
+                return taskRepository.findByPriority(priority, pageable);
+            }
+
+            if (status != null) {
+                return taskRepository.findByStatus(status, pageable);
+            }
+
+            return taskRepository.findAll(pageable);
+        }
+
+        User user = userRepository.findByEmail(email).orElseThrow();
+
+        if (priority != null && status != null) {
+            return taskRepository.findByUserAndPriorityAndStatus(user, priority, status, pageable);
+        }
+
+        return taskRepository.findByUser(user, pageable);
+    }
 }

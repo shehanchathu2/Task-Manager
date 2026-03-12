@@ -10,11 +10,18 @@ import { useAuth } from "@/context/AuthContext";
 
 export default function Dashboard() {
 
-  const { fetchTasks, tasks, loading } = useAuth();
+  const { fetchTasks, tasks, loading , fetchTasksFilter} = useAuth();
 
   const [show, setShow] = useState(false);
   const [updateShow, setUpdateShow] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+
+  const [priorityFilter, setPriorityFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  
+  const handleFilter = () => {
+  fetchTasksFilter(priorityFilter, statusFilter);
+};
 
   const deleteTask = async (id: number) => {
     if (confirm("Are you sure you want to delete this task?")) {
@@ -52,6 +59,8 @@ export default function Dashboard() {
             + Add Task
           </button>
 
+          
+          
         </div>
 
         {show && (
@@ -92,7 +101,7 @@ export default function Dashboard() {
               className="relative bg-white border rounded-xl p-5 hover:shadow-md transition"
             >
 
-              
+
               <Pencil
                 size={16}
                 className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 cursor-pointer"
@@ -121,13 +130,25 @@ export default function Dashboard() {
 
               <div className="flex justify-between mb-4">
 
-                <span className="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded-full">
+                <span className={`text-xs px-3 py-1 rounded-full 
+  ${task.status === "TODO" ? "bg-gray-100 text-gray-700" : ""}
+  ${task.status === "IN_PROGRESS" ? "bg-yellow-100 text-yellow-700" : ""}
+  ${task.status === "DONE" ? "bg-green-100 text-green-700" : ""}
+`}>
                   {task.status}
                 </span>
 
-                <span className="text-xs px-3 py-1 bg-blue-50 text-blue-600 rounded-full">
-                  {task.priority}
-                </span>
+                <span
+  className={`text-xs px-3 py-1 rounded-full ${
+    task.priority === "HIGH"
+      ? "bg-red-100 text-red-700"
+      : task.priority === "MEDIUM"
+      ? "bg-yellow-100 text-yellow-700"
+      : "bg-green-100 text-green-700"
+  }`}
+>
+  {task.priority}
+</span>
 
               </div>
 

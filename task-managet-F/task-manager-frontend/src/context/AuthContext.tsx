@@ -14,6 +14,7 @@ interface AuthContextType {
   fetchTasks: () => Promise<void>;
   tasks: Task[];
   loading: boolean;
+  fetchTasksFilter: (priority: string, status: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -53,6 +54,20 @@ export const AuthProvider = ({ children }: any) => {
       setLoading(false);
     }
   };
+
+  const fetchTasksFilter = async (priority: string, status: string) => {
+    try {
+      const res = await API.get("/tasks/filter", {
+        params: {
+          priority: priority || undefined,
+          status: status || undefined,
+        },
+      });
+      setTasks(res.data.content);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
@@ -62,7 +77,7 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   return (
-    <AuthContext.Provider value={{ token, role, login, logout,fetchTasks ,tasks,loading}}>
+    <AuthContext.Provider value={{ token, role, login, logout,fetchTasks ,fetchTasksFilter,tasks,loading}}>
       {children}
     </AuthContext.Provider>
   );
