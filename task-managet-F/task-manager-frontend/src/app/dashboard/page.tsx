@@ -10,7 +10,7 @@ import { useAuth } from "@/context/AuthContext";
 
 export default function Dashboard() {
 
-  const { fetchTasks, tasks, loading , fetchTasksFilter} = useAuth();
+  const { fetchTasks, tasks, loading , fetchTasksFilter,token} = useAuth();
 
   const [show, setShow] = useState(false);
   const [updateShow, setUpdateShow] = useState(false);
